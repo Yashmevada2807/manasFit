@@ -16,6 +16,7 @@ import {
   X
 } from 'lucide-react';
 import { SignedIn, SignedOut } from '@clerk/clerk-react';
+import Navbar from '@/components/Navbar';
 
 const Home = () => {
   const [showAuthModal, setShowAuthModal] = useState(false);
@@ -72,6 +73,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen">
+      <Navbar/>
       {/* Hero Section */}
       <section className="bg-gradient-to-br from-primary-50 to-primary-100 py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

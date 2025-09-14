@@ -184,7 +184,7 @@ const ActivityHeatmap = ({ data, year = new Date().getFullYear(), onDateClick }:
       </div>
 
       {/* Heatmap Grid */}
-      <div className="overflow-x-auto">
+      <div className="overflow-x-auto scrollbar-thin scrollbar-thumb-green-600 scrollbar-track-gray-200">
         <div className="flex space-x-1 min-w-max">
           {weeks.map((week, weekIndex) => (
             <div key={weekIndex} className="flex flex-col space-y-1">

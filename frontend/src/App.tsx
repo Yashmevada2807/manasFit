@@ -38,7 +38,7 @@ function AppContent() {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       <main className="flex-1">
-      <Navbar />  
+      {/* <Navbar />   */}
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />

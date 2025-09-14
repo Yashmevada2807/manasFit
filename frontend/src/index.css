@@ -24,11 +24,11 @@
   }
   
   .btn-secondary {
-    @apply bg-brutal-yellow text-brutal-black border-4 border-brutal-black hover:bg-brutal-black hover:text-brutal-yellow shadow-brutalist hover:shadow-brutalist-hover dark:bg-brutal-yellow dark:text-dark-text dark:border-dark-border dark:hover:bg-dark-surface dark:hover:text-brutal-yellow;
+    @apply bg-brutal-yellow text-brutal-black border-[2px] border-brutal-black hover:bg-brutal-black hover:text-brutal-yellow shadow-brutalist hover:shadow-brutalist-hover dark:bg-brutal-yellow dark:text-dark-text dark:border-dark-border dark:hover:bg-dark-surface dark:hover:text-brutal-yellow;
   }
   
   .btn-outline {
-    @apply bg-brutal-white text-brutal-black border-4 border-brutal-black hover:bg-mongo-500 hover:text-brutal-black shadow-brutalist hover:shadow-brutalist-hover dark:bg-dark-card dark:text-dark-text dark:border-dark-border dark:hover:bg-mongo-500 dark:hover:text-dark-text;
+    @apply bg-brutal-white text-brutal-black border-[2px] border-brutal-black hover:bg-mongo-500 hover:text-brutal-black shadow-brutalist hover:shadow-brutalist-hover dark:bg-dark-card dark:text-dark-text dark:border-dark-border dark:hover:bg-mongo-500 dark:hover:text-dark-text;
   }
   
   .btn-ghost {
@@ -49,7 +49,7 @@
   
   /* Neo-Brutalist Input Styles */
   .input {
-    @apply w-full bg-brutal-white text-brutal-black font-bold border-4 border-brutal-black px-4 py-3 placeholder:text-gray-600 focus:outline-none focus:bg-mongo-50 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-dark-card dark:text-dark-text dark:border-dark-border dark:placeholder:text-dark-textSecondary dark:focus:bg-dark-surface;
+    @apply w-full bg-brutal-white text-brutal-black font-bold border-[2px] border-brutal-black px-4 py-3 placeholder:text-gray-600 focus:outline-none focus:bg-mongo-50 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-dark-card dark:text-dark-text dark:border-dark-border dark:placeholder:text-dark-textSecondary dark:focus:bg-dark-surface;
   }
   
   /* Neo-Brutalist Card Styles */
@@ -118,7 +118,9 @@
 
 /* Remove soft scrollbar for brutalist aesthetic */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 2px;
+  height: 4px ;
+  
 }
 
 ::-webkit-scrollbar-track {
@@ -126,7 +128,9 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #000000;
+  background: #58c976;
+  cursor: pointer;
+  border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
