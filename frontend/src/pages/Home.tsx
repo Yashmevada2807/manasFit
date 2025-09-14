@@ -73,18 +73,19 @@ const Home = () => {
   return (
     <div className="min-h-screen">
       {/* Hero Section */}
-      <section className="bg-gradient-to-br from-primary-50 to-primary-100 py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-6">
+      <section className="bg-neutral-50 py-44  max-w-full">
+        <div className=" relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <img src="/main.png" alt="Hero Background" className="absolute -bottom-24 hidden xl:block -right-44 max-h-[528px]" />
+          <div className="text-start">
+            <h1 className="text-4xl md:text-6xl font-bold text-gray-900 mb-1">
               AI Platform for Student
-              <span className="text-primary-600"> Wellness</span>
             </h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-3xl mx-auto">
+              <h1 className="text-primary-600 text-4xl md:text-6xl font-bold"> Wellness</h1>
+            <p className="text-xl text-gray-600 mb-8 max-w-3xl tracking-tight mt-3 ">
               Track your mental and physical health, get personalized insights, 
               and build better habits with our comprehensive wellness platform.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-4 justify-start">
               <SignedIn>
                 <Link to="/dashboard" className="btn btn-primary btn-lg">
                   Go to Dashboard
@@ -102,19 +103,12 @@ const Home = () => {
                   Get Started Free
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </button>
-                <button 
-                  onClick={() => {
-                    setAuthMode('signin');
-                    setShowAuthModal(true);
-                  }}
-                  className="btn btn-outline btn-lg"
-                >
-                  Sign In
-                </button>
+                
               </SignedOut>
             </div>
           </div>
         </div>
+        
       </section>
 
       {/* Stats Section */}
