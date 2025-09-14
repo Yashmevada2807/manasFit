@@ -20,7 +20,7 @@
   }
   
   .btn-primary {
-    @apply bg-mongo-500 text-brutal-black border-4 border-brutal-black hover:bg-brutal-black hover:text-mongo-500 shadow-brutalist hover:shadow-brutalist-hover dark:bg-mongo-500 dark:text-dark-text dark:border-dark-border dark:hover:bg-dark-surface dark:hover:text-mongo-500;
+    @apply bg-mongo-500 text-brutal-black border-[2px] border-brutal-black hover:bg-brutal-black hover:text-mongo-500 shadow-brutalist hover:shadow-brutalist-hover dark:bg-mongo-500 dark:text-dark-text dark:border-dark-border dark:hover:bg-dark-surface dark:hover:text-mongo-500;
   }
   
   .btn-secondary {
