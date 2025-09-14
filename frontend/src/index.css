@@ -4,11 +4,11 @@
 
 @layer base {
   * {
-    @apply border-brutal-black;
+    @apply border-brutal-black dark:border-dark-border;
   }
   
   body {
-    @apply bg-brutal-grey text-brutal-black font-brutalist;
+    @apply bg-brutal-grey text-brutal-black dark:bg-dark-bg dark:text-dark-text;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 }
@@ -20,19 +20,19 @@
   }
   
   .btn-primary {
-    @apply bg-mongo-500 text-brutal-black border-4 border-brutal-black hover:bg-brutal-black hover:text-mongo-500 shadow-brutalist hover:shadow-brutalist-hover;
+    @apply bg-mongo-500 text-brutal-black border-4 border-brutal-black hover:bg-brutal-black hover:text-mongo-500 shadow-brutalist hover:shadow-brutalist-hover dark:bg-mongo-500 dark:text-dark-text dark:border-dark-border dark:hover:bg-dark-surface dark:hover:text-mongo-500;
   }
   
   .btn-secondary {
-    @apply bg-brutal-yellow text-brutal-black border-4 border-brutal-black hover:bg-brutal-black hover:text-brutal-yellow shadow-brutalist hover:shadow-brutalist-hover;
+    @apply bg-brutal-yellow text-brutal-black border-4 border-brutal-black hover:bg-brutal-black hover:text-brutal-yellow shadow-brutalist hover:shadow-brutalist-hover dark:bg-brutal-yellow dark:text-dark-text dark:border-dark-border dark:hover:bg-dark-surface dark:hover:text-brutal-yellow;
   }
   
   .btn-outline {
-    @apply bg-brutal-white text-brutal-black border-4 border-brutal-black hover:bg-mongo-500 hover:text-brutal-black shadow-brutalist hover:shadow-brutalist-hover;
+    @apply bg-brutal-white text-brutal-black border-4 border-brutal-black hover:bg-mongo-500 hover:text-brutal-black shadow-brutalist hover:shadow-brutalist-hover dark:bg-dark-card dark:text-dark-text dark:border-dark-border dark:hover:bg-mongo-500 dark:hover:text-dark-text;
   }
   
   .btn-ghost {
-    @apply bg-transparent text-brutal-black border-4 border-brutal-black hover:bg-mongo-500 hover:text-brutal-black;
+    @apply bg-transparent text-brutal-black border-4 border-brutal-black hover:bg-mongo-500 hover:text-brutal-black dark:bg-transparent dark:text-dark-text dark:border-dark-border dark:hover:bg-mongo-500 dark:hover:text-dark-text;
   }
   
   .btn-sm {
@@ -49,24 +49,24 @@
   
   /* Neo-Brutalist Input Styles */
   .input {
-    @apply w-full bg-brutal-white text-brutal-black font-bold border-4 border-brutal-black px-4 py-3 placeholder:text-gray-600 focus-visible:outline-none focus-visible:bg-mongo-50 disabled:cursor-not-allowed disabled:opacity-50;
+    @apply w-full bg-brutal-white text-brutal-black font-bold border-4 border-brutal-black px-4 py-3 placeholder:text-gray-600 focus:outline-none focus:bg-mongo-50 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-dark-card dark:text-dark-text dark:border-dark-border dark:placeholder:text-dark-textSecondary dark:focus:bg-dark-surface;
   }
   
   /* Neo-Brutalist Card Styles */
   .card {
-    @apply bg-mongo-50 text-brutal-black border-4 border-brutal-black shadow-brutalist;
+    @apply bg-mongo-50 text-brutal-black border-4 border-brutal-black shadow-brutalist dark:bg-dark-card dark:text-dark-text dark:border-dark-border;
   }
   
   .card-header {
-    @apply p-6 border-b-4 border-brutal-black;
+    @apply p-6 border-b-4 border-brutal-black dark:border-dark-border;
   }
   
   .card-title {
-    @apply text-2xl font-bold tracking-tight text-brutal-black;
+    @apply text-2xl font-bold tracking-tight text-brutal-black dark:text-dark-text uppercase;
   }
   
   .card-description {
-    @apply text-base text-gray-700 font-medium;
+    @apply text-base text-gray-700 font-medium dark:text-dark-textSecondary;
   }
   
   .card-content {
@@ -74,7 +74,7 @@
   }
   
   .card-footer {
-    @apply p-6 border-t-4 border-brutal-black;
+    @apply p-6 border-t-4 border-brutal-black dark:border-dark-border;
   }
   
   /* Brutalist Alert Styles */

@@ -11,12 +11,22 @@ import {
   AlertCircle,
   Award,
   Plus,
-  Filter
+  Filter,
+  BarChart3,
+  Clock,
+  Zap,
+  Users,
+  ChevronRight,
+  Eye,
+  CheckCircle2,
+  Menu
 } from 'lucide-react';
 import { useWellnessStore } from '../store/wellnessStore';
-import { useAuthStore } from '../store/authStore';
+import { useUser } from '@clerk/clerk-react';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/Card';
 import WellnessChart from '../components/WellnessChart';
+import ActivityHeatmap from '../components/ActivityHeatmap';
+import Sidebar from '../components/Sidebar';
 import AddWellnessDataModal from '../components/AddWellnessDataModal';
 import { format } from 'date-fns';
 
@@ -28,8 +38,9 @@ const Dashboard = () => {
     currentPeriod, 
     setCurrentPeriod 
   } = useWellnessStore();
-  const { user } = useAuthStore();
+  const { user } = useUser();
   const [showAddModal, setShowAddModal] = useState(false);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   useEffect(() => {
     getDashboardData();
@@ -42,8 +53,11 @@ const Dashboard = () => {
 
   if (isLoading && !dashboardData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-brutal-grey">
-        <div className="loading-spinner" />
+      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+        <div className="flex flex-col items-center space-y-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+          <p className="text-gray-600">Loading your wellness dashboard...</p>
+        </div>
       </div>
     );
   }
@@ -52,112 +66,161 @@ const Dashboard = () => {
   const alerts = dashboardData?.alerts || [];
   const unreadAlerts = alerts.filter(alert => !alert.isRead);
 
+  // Generate mock heatmap data for demonstration
+  const generateHeatmapData = () => {
+    const data = [];
+    const today = new Date();
+    
+    for (let i = 0; i < 365; i++) {
+      const date = new Date(today);
+      date.setDate(date.getDate() - i);
+      
+      // Random activity data (in real app, this would come from backend)
+      const count = Math.floor(Math.random() * 5);
+      const level = count === 0 ? 0 : Math.min(Math.ceil(count), 4);
+      
+      data.push({
+        date: format(date, 'yyyy-MM-dd'),
+        count,
+        level
+      });
+    }
+    
+    return data.reverse();
+  };
+
+  const heatmapData = generateHeatmapData();
+
   const statCards = [
     {
-      title: 'STEPS TODAY',
+      title: 'Steps Today',
       value: stats?.averageSteps.toLocaleString() || '0',
       icon: Activity,
-      goal: user?.preferences.goals.dailySteps || 10000,
+      goal: 10000,
+      color: 'blue',
+      change: '+12%',
+      trend: 'up'
     },
     {
-      title: 'SLEEP HOURS',
-      value: `${stats?.averageSleep || 0}H`,
+      title: 'Sleep Hours',
+      value: `${stats?.averageSleep || 0}h`,
       icon: Moon,
-      goal: user?.preferences.goals.sleepHours || 8,
+      goal: 8,
+      color: 'purple',
+      change: '+5%',
+      trend: 'up'
     },
     {
-      title: 'STUDY HOURS',
-      value: `${stats?.averageStudy || 0}H`,
+      title: 'Study Hours',
+      value: `${stats?.averageStudy || 0}h`,
       icon: BookOpen,
-      goal: user?.preferences.goals.studyHours || 6,
+      goal: 6,
+      color: 'green',
+      change: '-2%',
+      trend: 'down'
     },
     {
-      title: 'WATER INTAKE',
+      title: 'Water Intake',
       value: `${stats?.averageWater || 0}L`,
       icon: Droplets,
-      goal: user?.preferences.goals.waterIntake || 2.5,
+      goal: 2.5,
+      color: 'cyan',
+      change: '+8%',
+      trend: 'up'
     },
   ];
 
+  const quickActions = [
+    { title: 'Log Activity', icon: Activity, color: 'blue', action: () => setShowAddModal(true) },
+    { title: 'Set Goal', icon: Target, color: 'green', action: () => {} },
+    { title: 'View Insights', icon: Eye, color: 'purple', action: () => {} },
+    { title: 'Export Data', icon: BarChart3, color: 'orange', action: () => {} },
+  ];
+
   return (
-    <div className="min-h-screen bg-brutal-grey">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div className="brutalist-block bg-mongo-500 text-brutal-black mb-4 inline-block">
-                <h1 className="text-4xl font-bold px-6 py-4 uppercase">
-                  WELCOME BACK, {user?.name?.toUpperCase()}!
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar */}
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      
+      {/* Main Content */}
+      <div className="flex-1 lg:ml-0">
+        {/* Top Bar */}
+        <div className="bg-white border-b border-gray-200 px-4 py-4 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <Menu className="w-5 h-5 text-gray-600" />
+              </button>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">
+                  Welcome back, {user?.firstName || 'User'}! 👋
                 </h1>
+                <p className="text-gray-600">
+                  Here's your wellness overview for the last {
+                    currentPeriod === '7d' ? '7 days' : 
+                    currentPeriod === '30d' ? '30 days' : '90 days'
+                  }
+                </p>
               </div>
-              <p className="text-lg font-bold text-brutal-black uppercase">
-                HERE'S YOUR WELLNESS OVERVIEW FOR THE LAST {
-                  currentPeriod === '7d' ? '7 DAYS' : 
-                  currentPeriod === '30d' ? '30 DAYS' : '90 DAYS'
-                }
-              </p>
             </div>
-            <div className="mt-4 sm:mt-0 flex items-center space-x-3">
+            
+            <div className="flex items-center space-x-4">
+              {/* Period Selector */}
+              <div className="flex items-center space-x-2 bg-gray-100 rounded-lg p-1">
+                {['1d', '7d', '30d', '90d'].map((period) => (
+                  <button
+                    key={period}
+                    onClick={() => handlePeriodChange(period)}
+                    className={`px-3 py-2 text-sm font-medium rounded-md transition-colors ${
+                      currentPeriod === period
+                        ? 'bg-white text-primary-600 shadow-sm'
+                        : 'text-gray-600 hover:text-gray-900'
+                    }`}
+                  >
+                    {period === '1d' ? 'Today' : 
+                     period === '7d' ? '7 Days' :
+                     period === '30d' ? '30 Days' : '90 Days'}
+                  </button>
+                ))}
+              </div>
+              
               <button
                 onClick={() => setShowAddModal(true)}
-                className="btn btn-secondary btn-md uppercase"
+                className="bg-primary-600 hover:bg-primary-700 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2 transition-colors"
               >
-                <Plus className="w-5 h-5 mr-2" />
-                ADD DATA
+                <Plus className="w-4 h-4" />
+                <span>Add Data</span>
               </button>
-            </div>
-          </div>
-
-          {/* Period Selector */}
-          <div className="mt-6 flex items-center space-x-4">
-            <Filter className="w-6 h-6 text-brutal-black" />
-            <div className="flex space-x-2">
-              {['1d', '7d', '30d', '90d'].map((period) => (
-                <button
-                  key={period}
-                  onClick={() => handlePeriodChange(period)}
-                  className={`px-4 py-2 font-bold border-4 border-brutal-black transition-all uppercase text-sm ${
-                    currentPeriod === period
-                      ? 'bg-brutal-yellow text-brutal-black'
-                      : 'bg-brutal-white text-brutal-black hover:bg-mongo-50'
-                  }`}
-                >
-                  {period === '1d' ? 'TODAY' : 
-                   period === '7d' ? '7 DAYS' :
-                   period === '30d' ? '30 DAYS' : '90 DAYS'}
-                </button>
-              ))}
             </div>
           </div>
         </div>
 
+        {/* Dashboard Content */}
+        <div className="p-4 lg:p-8">
+
         {/* Alerts */}
         {unreadAlerts.length > 0 && (
-          <div className="mb-6">
-            <Card variant="accent">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <AlertCircle className="w-6 h-6 mr-3" />
-                  WELLNESS ALERTS ({unreadAlerts.length})
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-3">
-                  {unreadAlerts.slice(0, 3).map((alert) => (
-                    <div
-                      key={alert._id}
-                      className="brutalist-block bg-brutal-white text-brutal-black p-4"
-                    >
-                      <p className="font-bold text-sm uppercase">{alert.message}</p>
-                      <p className="text-xs font-medium mt-2 uppercase">
-                        {format(new Date(alert.triggeredAt), 'MMM d, h:mm a')}
+          <div className="mb-8">
+            <div className="bg-amber-50 border border-amber-200 rounded-lg p-4">
+              <div className="flex items-start">
+                <AlertCircle className="w-5 h-5 text-amber-600 mt-0.5 mr-3 flex-shrink-0" />
+                <div className="flex-1">
+                  <h3 className="text-sm font-medium text-amber-800 mb-2">
+                    You have {unreadAlerts.length} wellness alert{unreadAlerts.length > 1 ? 's' : ''}
+                  </h3>
+                  <div className="space-y-2">
+                    {unreadAlerts.slice(0, 2).map((alert) => (
+                      <p key={alert._id} className="text-sm text-amber-700">
+                        {alert.message}
                       </p>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
           </div>
         )}
 
@@ -168,144 +231,178 @@ const Dashboard = () => {
             const progress = stat.goal > 0 ? Math.min((parseFloat(stat.value.replace(/[^\d.]/g, '')) / stat.goal) * 100, 100) : 0;
             
             return (
-              <Card key={index} hover>
-                <CardContent>
-                  <div className="flex items-center justify-between mb-4">
-                    <div>
-                      <p className="text-sm font-bold text-brutal-black uppercase">{stat.title}</p>
-                      <p className="text-3xl font-bold text-brutal-black mt-1">{stat.value}</p>
-                      <p className="text-xs font-medium text-gray-600 mt-1 uppercase">
-                        GOAL: {stat.goal}{stat.title.includes('HOURS') ? 'H' : stat.title.includes('WATER') ? 'L' : ''}
-                      </p>
-                    </div>
-                    <div className="w-16 h-16 bg-mongo-500 border-4 border-brutal-black flex items-center justify-center">
-                      <Icon className="w-8 h-8 text-brutal-black" />
-                    </div>
+              <div key={index} className="bg-white rounded-xl border border-gray-200 p-6 hover:shadow-lg transition-shadow">
+                <div className="flex items-center justify-between mb-4">
+                  <div className={`w-12 h-12 bg-${stat.color}-100 rounded-lg flex items-center justify-center`}>
+                    <Icon className={`w-6 h-6 text-${stat.color}-600`} />
                   </div>
-                  <div className="mt-4">
-                    <div className="flex items-center justify-between text-xs font-bold text-brutal-black mb-2 uppercase">
-                      <span>PROGRESS</span>
-                      <span>{Math.round(progress)}%</span>
-                    </div>
-                    <div className="w-full bg-brutal-white border-2 border-brutal-black h-4">
-                      <div
-                        className={`h-full transition-all duration-300 ${
-                          progress >= 100 ? 'bg-mongo-500' : 
-                          progress >= 75 ? 'bg-mongo-400' : 
-                          progress >= 50 ? 'bg-brutal-yellow' : 'bg-brutal-red'
-                        }`}
-                        style={{ width: `${Math.min(progress, 100)}%` }}
-                      />
-                    </div>
+                  <div className={`flex items-center space-x-1 text-sm font-medium ${
+                    stat.trend === 'up' ? 'text-green-600' : 'text-red-600'
+                  }`}>
+                    <TrendingUp className={`w-4 h-4 ${stat.trend === 'down' ? 'rotate-180' : ''}`} />
+                    <span>{stat.change}</span>
                   </div>
-                </CardContent>
-              </Card>
+                </div>
+                
+                <div className="mb-4">
+                  <p className="text-sm font-medium text-gray-600 mb-1">{stat.title}</p>
+                  <p className="text-2xl font-bold text-gray-900">{stat.value}</p>
+                  <p className="text-xs text-gray-500">Goal: {stat.goal}{stat.title.includes('Hours') ? 'h' : stat.title.includes('Water') ? 'L' : ''}</p>
+                </div>
+                
+                <div className="w-full bg-gray-200 rounded-full h-2">
+                  <div
+                    className={`bg-${stat.color}-600 h-2 rounded-full transition-all duration-300`}
+                    style={{ width: `${Math.min(progress, 100)}%` }}
+                  />
+                </div>
+                <div className="flex justify-between text-xs text-gray-500 mt-1">
+                  <span>0</span>
+                  <span className="font-medium">{Math.round(progress)}%</span>
+                  <span>{stat.goal}</span>
+                </div>
+              </div>
             );
           })}
         </div>
 
-        {/* Charts and Additional Info */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-          {/* Wellness Chart */}
+        {/* Main Content Grid */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+          {/* Activity Heatmap */}
           <div className="lg:col-span-2">
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <TrendingUp className="w-6 h-6 mr-3" />
-                  WELLNESS TRENDS
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <WellnessChart data={dashboardData?.wellnessEntries || []} />
-              </CardContent>
-            </Card>
+            <ActivityHeatmap 
+              data={heatmapData}
+              onDateClick={(date) => console.log('Clicked date:', date)}
+            />
           </div>
 
-          {/* Current Streak & Rewards */}
+          {/* Quick Actions & Streak Info */}
           <div className="space-y-6">
             {/* Current Streak */}
-            <Card variant="primary">
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Calendar className="w-6 h-6 mr-3" />
-                  CURRENT STREAK
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center">
-                  <div className="text-5xl font-bold text-brutal-black mb-4">
-                    {dashboardData?.currentStreak || 0}
-                  </div>
-                  <p className="text-lg font-bold text-brutal-black uppercase">DAYS IN A ROW</p>
-                  <p className="text-sm font-medium text-brutal-black mt-4 uppercase">
-                    KEEP TRACKING YOUR WELLNESS DATA TO MAINTAIN YOUR STREAK!
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-semibold text-gray-900">Current Streak</h3>
+                <Zap className="w-5 h-5 text-yellow-500" />
+              </div>
+              <div className="text-center">
+                <div className="text-4xl font-bold text-gray-900 mb-2">
+                  {dashboardData?.currentStreak || 0}
+                </div>
+                <p className="text-sm text-gray-600 mb-4">days in a row</p>
+                <div className="bg-gray-100 rounded-lg p-3">
+                  <p className="text-xs text-gray-600">
+                    Keep tracking your wellness data to maintain your streak!
                   </p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
 
-            {/* Recent Rewards */}
-            {dashboardData?.recentRewards && dashboardData.recentRewards.length > 0 && (
-              <Card variant="accent">
-                <CardHeader>
-                  <CardTitle className="flex items-center">
-                    <Award className="w-6 h-6 mr-3" />
-                    RECENT REWARDS
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    {dashboardData.recentRewards.slice(0, 3).map((reward) => (
-                      <div key={reward.id} className="flex items-center space-x-3">
-                        <div className="w-10 h-10 bg-brutal-black border-2 border-brutal-black flex items-center justify-center">
-                          <Award className="w-5 h-5 text-brutal-yellow" />
+            {/* Quick Actions */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h3 className="text-lg font-semibold text-gray-900 mb-4">Quick Actions</h3>
+              <div className="space-y-3">
+                {quickActions.map((action, index) => {
+                  const Icon = action.icon;
+                  return (
+                    <button
+                      key={index}
+                      onClick={action.action}
+                      className="w-full flex items-center justify-between p-3 rounded-lg border border-gray-200 hover:bg-gray-50 transition-colors group"
+                    >
+                      <div className="flex items-center space-x-3">
+                        <div className={`w-8 h-8 bg-${action.color}-100 rounded-lg flex items-center justify-center`}>
+                          <Icon className={`w-4 h-4 text-${action.color}-600`} />
                         </div>
-                        <div className="flex-1">
-                          <p className="text-sm font-bold text-brutal-black uppercase">{reward.name}</p>
-                          <p className="text-xs font-medium text-brutal-black uppercase">{reward.description}</p>
-                        </div>
+                        <span className="text-sm font-medium text-gray-900">{action.title}</span>
                       </div>
-                    ))}
+                      <ChevronRight className="w-4 h-4 text-gray-400 group-hover:text-gray-600" />
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+          {/* Wellness Trends */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">Wellness Trends</h3>
+              <TrendingUp className="w-5 h-5 text-gray-400" />
+            </div>
+            <WellnessChart data={dashboardData?.wellnessEntries || []} />
+          </div>
+
+          {/* Recent Rewards */}
+          <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">Recent Achievements</h3>
+              <Award className="w-5 h-5 text-gray-400" />
+            </div>
+            {dashboardData?.recentRewards && dashboardData.recentRewards.length > 0 ? (
+              <div className="space-y-4">
+                {dashboardData.recentRewards.slice(0, 3).map((reward) => (
+                  <div key={reward.id} className="flex items-center space-x-3 p-3 rounded-lg bg-gray-50">
+                    <div className="w-10 h-10 bg-yellow-100 rounded-lg flex items-center justify-center">
+                      <Award className="w-5 h-5 text-yellow-600" />
+                    </div>
+                    <div className="flex-1">
+                      <p className="text-sm font-medium text-gray-900">{reward.name}</p>
+                      <p className="text-xs text-gray-600">{reward.description}</p>
+                    </div>
+                    <CheckCircle2 className="w-4 h-4 text-green-500" />
                   </div>
-                </CardContent>
-              </Card>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8">
+                <Award className="w-12 h-12 text-gray-300 mx-auto mb-4" />
+                <p className="text-gray-500 text-sm">No achievements yet</p>
+                <p className="text-gray-400 text-xs">Keep tracking to earn rewards!</p>
+              </div>
             )}
           </div>
         </div>
 
         {/* Goals Section */}
         {dashboardData?.goals && dashboardData.goals.length > 0 && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <Target className="w-6 h-6 mr-3" />
-                YOUR GOALS
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {dashboardData.goals.map((goal) => (
-                  <div key={goal._id} className="brutalist-block bg-brutal-white text-brutal-black p-4">
-                    <div className="flex items-center justify-between mb-3">
-                      <h4 className="font-bold text-brutal-black uppercase">{goal.type}</h4>
-                      <span className="text-sm font-medium text-brutal-black uppercase">{goal.period}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm font-bold mb-2">
-                      <span>{goal.current}</span>
-                      <span>/ {goal.target}</span>
-                    </div>
-                    <div className="w-full bg-brutal-grey border-2 border-brutal-black h-3">
-                      <div
-                        className="bg-mongo-500 h-full transition-all duration-300"
-                        style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }}
-                      />
-                    </div>
+          <div className="bg-white rounded-xl border border-gray-200 p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="text-lg font-semibold text-gray-900">Your Goals</h3>
+              <Target className="w-5 h-5 text-gray-400" />
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {dashboardData.goals.map((goal) => (
+                <div key={goal._id} className="p-4 rounded-lg border border-gray-200 hover:shadow-md transition-shadow">
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="font-medium text-gray-900 capitalize">{goal.type}</h4>
+                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full">
+                      {goal.period}
+                    </span>
                   </div>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+                  <div className="flex items-center justify-between text-sm font-medium mb-2">
+                    <span className="text-gray-900">{goal.current}</span>
+                    <span className="text-gray-500">/ {goal.target}</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                      style={{ width: `${Math.min((goal.current / goal.target) * 100, 100)}%` }}
+                    />
+                  </div>
+                  <div className="flex justify-between text-xs text-gray-500 mt-1">
+                    <span>0</span>
+                    <span className="font-medium">{Math.round((goal.current / goal.target) * 100)}%</span>
+                    <span>{goal.target}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
+        </div>
       </div>
 
       {/* Add Wellness Data Modal */}

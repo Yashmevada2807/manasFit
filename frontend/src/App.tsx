@@ -2,9 +2,9 @@ import { useEffect } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { ClerkProvider, SignedIn, SignedOut, useUser } from '@clerk/clerk-react';
 import { useWellnessStore } from './store/wellnessStore';
+import { ThemeProvider } from './contexts/ThemeContext';
 
 // Components
-import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Chatbot from './components/Chatbot';
 
@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import Resources from './pages/Resources';
 import Profile from './pages/Profile';
+import Navbar from './components/Navbar';
 
 // Get Clerk publishable key
 const clerkPubKey = (import.meta as any).env?.VITE_CLERK_PUBLISHABLE_KEY;
@@ -36,9 +37,8 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
-      <Navbar />
-      
       <main className="flex-1">
+      <Navbar />  
         <Routes>
           {/* Public routes */}
           <Route path="/" element={<Home />} />
@@ -102,7 +102,9 @@ function AppContent() {
 function App() {
   return (
     <ClerkProvider publishableKey={clerkPubKey}>
-      <AppContent />
+      <ThemeProvider>
+        <AppContent />
+      </ThemeProvider>
     </ClerkProvider>
   );
 }

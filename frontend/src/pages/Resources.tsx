@@ -15,10 +15,12 @@ import {
   Clock,
   Star,
   Bookmark,
-  ExternalLink
+  ExternalLink,
+  Menu
 } from 'lucide-react';
 import { resourcesAPI } from '../services/api';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/Card';
+import Sidebar from '../components/Sidebar';
 import toast from 'react-hot-toast';
 
 interface Resource {
@@ -48,6 +50,7 @@ const Resources = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedType, setSelectedType] = useState('');
   const [selectedDifficulty, setSelectedDifficulty] = useState('');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [savedResources, setSavedResources] = useState<string[]>([]);
 
@@ -173,15 +176,34 @@ const Resources = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">Wellness Resources</h1>
-          <p className="text-gray-600">
-            Discover articles, videos, tools, and courses to support your wellness journey.
-          </p>
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Sidebar */}
+      <Sidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
+      
+      {/* Main Content */}
+      <div className="flex-1 lg:ml-0">
+        {/* Top Bar */}
+        <div className="bg-white border-b border-gray-200 px-4 py-4 lg:px-8">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button
+                onClick={() => setSidebarOpen(!sidebarOpen)}
+                className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+              >
+                <Menu className="w-5 h-5 text-gray-600" />
+              </button>
+              <div>
+                <h1 className="text-2xl font-bold text-gray-900">Wellness Resources</h1>
+                <p className="text-gray-600">
+                  Discover articles, videos, tools, and courses to support your wellness journey.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
+
+        {/* Resources Content */}
+        <div className="p-4 lg:p-8">
 
         {/* Featured Resources */}
         {Object.keys(featuredResources).length > 0 && (
@@ -375,6 +397,7 @@ const Resources = () => {
             <p className="text-gray-500">Try adjusting your filters or search terms.</p>
           </div>
         )}
+        </div>
       </div>
     </div>
   );

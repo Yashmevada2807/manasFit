@@ -2,6 +2,12 @@ import { create } from 'zustand';
 import { wellnessAPI, type WellnessData, type WellnessGoal } from '../services/api';
 import toast from 'react-hot-toast';
 
+export interface ActivityHeatmapData {
+  date: string;
+  count: number;
+  level: number; // 0-4 for intensity levels
+}
+
 export interface WellnessEntry {
   _id: string;
   userId: string;
@@ -66,6 +72,7 @@ export interface DashboardData {
   goals: WellnessGoal[];
   alerts: WellnessAlert[];
   currentStreak: number;
+  heatmapData: ActivityHeatmapData[];
   recentRewards: Array<{
     id: string;
     name: string;

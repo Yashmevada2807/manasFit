@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -28,6 +29,16 @@ export default {
           red: '#FF3B3B',       // Error/Alert red (brutalist alerts)
           white: '#FFFFFF',     // Pure white
         },
+        // Dark mode colors
+        dark: {
+          bg: '#0A0A0A',        // Dark background
+          surface: '#1A1A1A',   // Dark surface
+          card: '#2A2A2A',      // Dark card background
+          border: '#404040',    // Dark border
+          text: '#FFFFFF',      // Dark text
+          textSecondary: '#A0A0A0', // Secondary dark text
+          accent: '#13AA52',    // Keep MongoDB green for accents
+        },
         // Keep existing structure for compatibility
         primary: {
           50: '#E6F4EA',
@@ -44,17 +55,11 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        brutalist: ['Inter', 'Arial', 'sans-serif'],
       },
       boxShadow: {
         'brutalist': '4px 4px 0px 0px #000000',
         'brutalist-lg': '8px 8px 0px 0px #000000',
         'brutalist-hover': '2px 2px 0px 0px #000000',
-      },
-      borderWidth: {
-        '3': '1px',
-        '4': '2px',
-        '6': '6px',
       },
     },
   },
