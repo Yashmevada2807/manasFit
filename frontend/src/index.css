@@ -1,0 +1,144 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  * {
+    @apply border-brutal-black;
+  }
+  
+  body {
+    @apply bg-brutal-grey text-brutal-black font-brutalist;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+}
+
+@layer components {
+  /* Neo-Brutalist Button Styles */
+  .btn {
+    @apply inline-flex items-center justify-center font-bold transition-all duration-200 focus-visible:outline-none disabled:opacity-50 disabled:pointer-events-none;
+  }
+  
+  .btn-primary {
+    @apply bg-mongo-500 text-brutal-black border-4 border-brutal-black hover:bg-brutal-black hover:text-mongo-500 shadow-brutalist hover:shadow-brutalist-hover;
+  }
+  
+  .btn-secondary {
+    @apply bg-brutal-yellow text-brutal-black border-4 border-brutal-black hover:bg-brutal-black hover:text-brutal-yellow shadow-brutalist hover:shadow-brutalist-hover;
+  }
+  
+  .btn-outline {
+    @apply bg-brutal-white text-brutal-black border-4 border-brutal-black hover:bg-mongo-500 hover:text-brutal-black shadow-brutalist hover:shadow-brutalist-hover;
+  }
+  
+  .btn-ghost {
+    @apply bg-transparent text-brutal-black border-4 border-brutal-black hover:bg-mongo-500 hover:text-brutal-black;
+  }
+  
+  .btn-sm {
+    @apply px-4 py-2 text-sm;
+  }
+  
+  .btn-md {
+    @apply px-6 py-3 text-base;
+  }
+  
+  .btn-lg {
+    @apply px-8 py-4 text-lg;
+  }
+  
+  /* Neo-Brutalist Input Styles */
+  .input {
+    @apply w-full bg-brutal-white text-brutal-black font-bold border-4 border-brutal-black px-4 py-3 placeholder:text-gray-600 focus-visible:outline-none focus-visible:bg-mongo-50 disabled:cursor-not-allowed disabled:opacity-50;
+  }
+  
+  /* Neo-Brutalist Card Styles */
+  .card {
+    @apply bg-mongo-50 text-brutal-black border-4 border-brutal-black shadow-brutalist;
+  }
+  
+  .card-header {
+    @apply p-6 border-b-4 border-brutal-black;
+  }
+  
+  .card-title {
+    @apply text-2xl font-bold tracking-tight text-brutal-black;
+  }
+  
+  .card-description {
+    @apply text-base text-gray-700 font-medium;
+  }
+  
+  .card-content {
+    @apply p-6;
+  }
+  
+  .card-footer {
+    @apply p-6 border-t-4 border-brutal-black;
+  }
+  
+  /* Brutalist Alert Styles */
+  .alert {
+    @apply border-4 border-brutal-black p-4 font-bold;
+  }
+  
+  .alert-error {
+    @apply bg-brutal-red text-brutal-white;
+  }
+  
+  .alert-warning {
+    @apply bg-brutal-yellow text-brutal-black;
+  }
+  
+  .alert-success {
+    @apply bg-mongo-500 text-brutal-black;
+  }
+  
+  /* Brutalist Block Sections */
+  .brutalist-block {
+    @apply border-4 border-brutal-black p-8;
+  }
+  
+  .brutalist-block-primary {
+    @apply bg-mongo-500 text-brutal-black;
+  }
+  
+  .brutalist-block-secondary {
+    @apply bg-mongo-600 text-brutal-white;
+  }
+  
+  .brutalist-block-accent {
+    @apply bg-brutal-yellow text-brutal-black;
+  }
+  
+  .brutalist-block-neutral {
+    @apply bg-brutal-grey text-brutal-black;
+  }
+}
+
+/* Remove soft scrollbar for brutalist aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #F2F2F2;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #000000;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #13AA52;
+}
+
+/* Loading animation - brutalist style */
+.loading-spinner {
+  @apply animate-spin border-4 border-brutal-black border-t-mongo-500 h-6 w-6;
+}
+
+/* Brutalist navbar */
+.navbar-brutalist {
+  @apply bg-mongo-600 text-brutal-white border-b-4 border-brutal-black;
+}
