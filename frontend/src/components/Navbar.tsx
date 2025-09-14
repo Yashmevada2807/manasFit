@@ -78,15 +78,6 @@ const Navbar = () => {
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => {
-                    setAuthMode('signin');
-                    setShowAuthModal(true);
-                  }}
-                  className="text-gray-600 hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium"
-                >
-                  Sign In
-                </button>
-                <button
-                  onClick={() => {
                     setAuthMode('signup');
                     setShowAuthModal(true);
                   }}
